@@ -1,4 +1,5 @@
 import AddTodo from "./components/AddTodo";
+import { PostsList } from "./components/PostsList";
 import Todos from "./components/Todos";
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
       </h1>
       <AddTodo />
       <Todos />
+      <PostsList/>
     </>
   );
 }

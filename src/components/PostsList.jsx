@@ -4,9 +4,12 @@ import { fetchPosts } from '../features/posts/postsSlice';
 
 export function PostsList() {
   const dispatch = useDispatch();
-  const posts = useSelector((state) => state.posts.posts);
-  const status = useSelector((state) => state.posts.status);
-  const error = useSelector((state) => state.posts.error);
+  
+  const { 
+    posts = [], 
+    status = 'idle', 
+    error = null 
+  } = useSelector((state) => state.posts);
 
   useEffect(() => {
     if (status === 'idle') {
@@ -22,11 +25,11 @@ export function PostsList() {
     content = posts.map((post) => (
       <div key={post.id}>
         <h3>{post.title}</h3>
-        <p>{post.body}</p>
+        <p>{post.body.substring(0, 100)}...</p>
       </div>
     ));
   } else if (status === 'failed') {
-    content = <div>{error}</div>;
+    content = <div>Error: {error}</div>;
   }
 
   return (

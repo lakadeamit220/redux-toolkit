@@ -4,32 +4,35 @@ import axios from 'axios';
 const initialState = {
   posts: [],
   status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed'
-  error: null,
+  error: null
 };
 
-export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
-  const response = await axios.get('https://jsonplaceholder.typicode.com/posts');
-  return response.data;
-});
+export const fetchPosts = createAsyncThunk(
+  'posts/fetchPosts',
+  async () => {
+    const response = await axios.get('https://jsonplaceholder.typicode.com/posts');
+    return response.data;
+  }
+);
 
 const postsSlice = createSlice({
   name: 'posts',
   initialState,
   reducers: {},
-  extraReducers(builder) {
+  extraReducers: (builder) => {
     builder
       .addCase(fetchPosts.pending, (state) => {
         state.status = 'loading';
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.posts = state.posts.concat(action.payload);
+        state.posts = action.payload;
       })
       .addCase(fetchPosts.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
       });
-  },
+  }
 });
 
 export default postsSlice.reducer;
