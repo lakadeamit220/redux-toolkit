@@ -1,5 +1,3 @@
-// features/posts/PostsList.js
-import React from "react";
 import {
   useGetPostsQuery,
   useDeletePostMutation,
