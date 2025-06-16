@@ -1,0 +1,50 @@
+import { useGetPostsQuery } from "../features/api/apiSlice";
+
+export function PostsListRTK() {
+  const {
+    data: posts,
+    isLoading,
+    isSuccess,
+    isError,
+    error,
+  } = useGetPostsQuery();
+
+  let content;
+
+  if (isLoading) {
+    content = (
+      <div className="flex justify-center items-center py-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+        <span className="ml-3">Loading posts...</span>
+      </div>
+    );
+  } else if (isSuccess) {
+    content = posts.map((post) => (
+      <div
+        key={post.id}
+        className="p-4 mb-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200"
+      >
+        <h3 className="text-xl font-semibold text-gray-800 mb-2">
+          {post.title}
+        </h3>
+        <p className="text-gray-600">{post.body}</p>
+      </div>
+    ));
+  } else if (isError) {
+    content = (
+      <div className="p-4 mb-4 bg-red-100 border-l-4 border-red-500 text-red-700">
+        <p>Error loading posts:</p>
+        <p className="font-medium">{error.toString()}</p>
+      </div>
+    );
+  }
+
+  return (
+    <section className="max-w-3xl mx-auto p-4">
+      <h2 className="text-center text-5xl font-bold text-green-700">
+        Posts (RTK Query)
+      </h2>
+      <div className="space-y-4">{content}</div>
+    </section>
+  );
+}
