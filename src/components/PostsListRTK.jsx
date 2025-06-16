@@ -1,50 +1,38 @@
-import { useGetPostsQuery } from "../features/api/apiSlice";
+// features/posts/PostsList.js
+import React from "react";
+import {
+  useGetPostsQuery,
+  useDeletePostMutation,
+} from "../features/api/apiSlice";
 
-export function PostsListRTK() {
-  const {
-    data: posts,
-    isLoading,
-    isSuccess,
-    isError,
-    error,
-  } = useGetPostsQuery();
+export const PostsListRTK = () => {
+  const { data: posts, isLoading, isError, error } = useGetPostsQuery();
+  const [deletePost] = useDeletePostMutation();
 
-  let content;
-
-  if (isLoading) {
-    content = (
-      <div className="flex justify-center items-center py-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-        <span className="ml-3">Loading posts...</span>
-      </div>
-    );
-  } else if (isSuccess) {
-    content = posts.map((post) => (
-      <div
-        key={post.id}
-        className="p-4 mb-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200"
-      >
-        <h3 className="text-xl font-semibold text-gray-800 mb-2">
-          {post.title}
-        </h3>
-        <p className="text-gray-600">{post.body}</p>
-      </div>
-    ));
-  } else if (isError) {
-    content = (
-      <div className="p-4 mb-4 bg-red-100 border-l-4 border-red-500 text-red-700">
-        <p>Error loading posts:</p>
-        <p className="font-medium">{error.toString()}</p>
-      </div>
-    );
-  }
+  if (isLoading) return <div className="text-center py-4">Loading...</div>;
+  if (isError)
+    return <div className="text-red-500 py-4">Error: {error.toString()}</div>;
 
   return (
-    <section className="max-w-3xl mx-auto p-4">
-      <h2 className="text-center text-5xl font-bold text-green-700">
-        Posts (RTK Query)
-      </h2>
-      <div className="space-y-4">{content}</div>
-    </section>
+    <div className="max-w-2xl mx-auto p-4">
+      <h1 className="text-center text-5xl font-bold text-green-700 py-5">Posts</h1>
+      <ul className="space-y-4">
+        {posts.map((post) => (
+          <li
+            key={post.id}
+            className="border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
+          >
+            <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
+            <p className="text-gray-600 mb-3">{post.body}</p>
+            <button
+              onClick={() => deletePost(post.id)}
+              className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded transition-colors"
+            >
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
-}
+};
